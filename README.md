@@ -1,73 +1,105 @@
-# Welcome to your Lovable project
+# Secure ML Pipeline Backend
 
-## Project info
+A FastAPI-based backend for secure machine learning pipeline with anomaly detection, JWT authentication, and blockchain-style logging.
 
-**URL**: https://lovable.dev/projects/9aac351b-4182-43e5-a682-c6827f897f87
+## Features
 
-## How can I edit this code?
+- **Machine Learning**: Anomaly detection using Isolation Forest and Local Outlier Factor
+- **Security**: JWT authentication, SHA-256 hashing, blockchain-style logging
+- **Database**: SQLite for user management and audit logs
+- **File Processing**: Support for CSV and JSON file uploads
+- **CORS**: Configured for frontend integration
 
-There are several ways of editing your application.
+## Quick Start
 
-**Use Lovable**
+1. **Install Dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/9aac351b-4182-43e5-a682-c6827f897f87) and start prompting.
+2. **Run the Server**
+   ```bash
+   uvicorn main:app --reload
+   ```
 
-Changes made via Lovable will be committed automatically to this repo.
+3. **Access the API**
+   - API: http://127.0.0.1:8000
+   - Interactive Docs: http://127.0.0.1:8000/docs
+   - ReDoc: http://127.0.0.1:8000/redoc
 
-**Use your preferred IDE**
+## Default Credentials
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- **Username**: admin
+- **Password**: admin123
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## API Endpoints
 
-Follow these steps:
+### Authentication
+- `POST /auth/login` - Login and get JWT token
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Data Processing
+- `POST /upload` - Upload CSV/JSON files
+- `POST /pipeline/run` - Run anomaly detection pipeline
+- `GET /results` - Get pipeline results with charts
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### Security
+- `GET /security/logs` - View blockchain-style audit logs
 
-# Step 3: Install the necessary dependencies.
-npm i
+### Health
+- `GET /health` - Health check
+- `GET /` - API info
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+## Usage Example
 
-**Edit a file directly in GitHub**
+1. **Login**
+   ```bash
+   curl -X POST "http://127.0.0.1:8000/auth/login" \
+        -H "Content-Type: application/json" \
+        -d '{"username": "admin", "password": "admin123"}'
+   ```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+2. **Upload Data**
+   ```bash
+   curl -X POST "http://127.0.0.1:8000/upload" \
+        -H "Authorization: Bearer YOUR_TOKEN" \
+        -F "file=@sample_data/demo_data.csv"
+   ```
 
-**Use GitHub Codespaces**
+3. **Run Pipeline**
+   ```bash
+   curl -X POST "http://127.0.0.1:8000/pipeline/run" \
+        -H "Authorization: Bearer YOUR_TOKEN" \
+        -H "Content-Type: application/json" \
+        -d '{"algorithm": "isolation_forest"}'
+   ```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Database Schema
 
-## What technologies are used for this project?
+### Users Table
+- `id`: Primary key
+- `username`: Unique username
+- `password_hash`: SHA-256 hashed password
+- `created_at`: Account creation timestamp
 
-This project is built with:
+### Blockchain Logs Table
+- `id`: Primary key
+- `action`: Action performed
+- `data_hash`: SHA-256 hash of action data
+- `timestamp`: Action timestamp
+- `previous_hash`: Hash of previous block
+- `block_hash`: Unique hash for this block
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Security Features
 
-## How can I deploy this project?
+- **JWT Authentication**: Secure token-based authentication
+- **Password Hashing**: SHA-256 for password storage
+- **Audit Logging**: Blockchain-style immutable logs
+- **CORS Protection**: Configured for specific origins
+- **Input Validation**: File type and data validation
 
-Simply open [Lovable](https://lovable.dev/projects/9aac351b-4182-43e5-a682-c6827f897f87) and click on Share -> Publish.
+## ML Algorithms
 
-## Can I connect a custom domain to my Lovable project?
+1. **Isolation Forest**: Efficient for large datasets
+2. **Local Outlier Factor**: Good for local anomaly detection
 
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Both algorithms return anomaly scores and risk levels (LOW/MEDIUM/HIGH).
