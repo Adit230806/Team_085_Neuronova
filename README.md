@@ -1,4 +1,4 @@
-# Secure ML Pipeline Backend
+# Secure ML Pipeline 
 
 A FastAPI-based backend for secure machine learning pipeline with anomaly detection, JWT authentication, and blockchain-style logging.
 
